@@ -91,7 +91,7 @@ namespace API_Example
             await _session.Daemon.BeginUpdateAsync();
             
             // Initialize wallet
-            await _session.Wallet.InitializeAsync(_session.Daemon, "c:/turtlecoin/walletd.exe", "c:/turtlecoin/testwallet.wallet", "12345", 11911);
+            await _session.Wallet.CreateOrInitializeAsync(_session.Daemon, "c:/turtlecoin/walletd.exe", "c:/turtlecoin/testwallet.wallet", "12345", 8070);
 
             // Begin wallet update loop
             await _session.Wallet.BeginUpdateAsync();

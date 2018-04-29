@@ -117,7 +117,7 @@ namespace TurtleCoinAPI
                 LogLine("Connected");
                 OnConnect?.Invoke(this, EventArgs.Empty);
             }
-            
+
             // Completed
             return Task.CompletedTask;
         }
@@ -125,27 +125,19 @@ namespace TurtleCoinAPI
         /// <summary>
         /// Stops updating and cleans up
         /// </summary>
-        public Task Exit(bool ForceExit = false)
+        public async Task Exit(bool ForceExit = false)
         {
             // Clean up
             Connected = false;
             Synced = false;
             CancellationSource.Cancel();
-            try
+            if (Local && !Process.HasExited)
             {
-                if (Local && !Process.HasExited)
-                    using (StreamWriter StreamWriter = Process.StandardInput)
-                    {
-                        LogLine("Saving");
-                        StreamWriter.WriteLine("exit");
-                        if (ForceExit)
-                            Process.Kill();
-                    }
+                LogLine("Saving");
+                using (StreamWriter StreamWriter = Process.StandardInput)
+                    await StreamWriter.WriteLineAsync("exit");
+                if (ForceExit) Process.Kill();
             }
-            catch { }
-
-            // Completed
-            return Task.CompletedTask;
         }
 
         /// <summary>
