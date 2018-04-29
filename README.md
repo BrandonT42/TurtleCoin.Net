@@ -4,7 +4,9 @@ An asynchronous wrapper API for loading and accessing the TurtleCoin daemon and 
 
 # Using the API
 
-To begin using the API, you must create a session
+To begin using the API, you must first include the Newstonsoft Json library in your project. You can find this on Nuget.
+
+Your next step is to create a session
 
 ```C#
 TurtleCoin _session = new TurtleCoin();
@@ -98,5 +100,19 @@ public void OnWalletUpdate(object sender, EventArgs e)
     else
         Console.WriteLine("Available Balance: {0}, Locked Amount: {1}",
             (sender as Wallet).AvailableBalance, (sender as Wallet).LockedAmount);
+}
+```
+
+Sending requests is also easy as pie
+
+```C#
+if (_session.Wallet.Synced)
+{
+    await _session.Wallet.SendRequestAsync(RequestMethod.GET_BALANCE, new JObject {
+            ["address"] = "TurtleCoin address"
+        }, out JObject Result);
+    
+    Console.WriteLine("Available Balance: {0}, Locked Amount: {1}",
+        Result["availableBalance"], Result["lockedAmount"]);
 }
 ```
